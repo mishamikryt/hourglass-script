@@ -1,40 +1,43 @@
 <script>
 window.inactivityHandler = {
     timer: null,
-    timeoutDuration: 30000,
-
+    timeoutDuration: 30000, // 30 секунд бездіяльності
     showHourglass: function() {
         const hourglass = document.getElementById('hourglass');
         if (hourglass) {
             hourglass.style.display = 'block';
+            hourglass.style.opacity = '1'; // Анімація появи (додатково)
         }
     },
-
     hideHourglass: function() {
         const hourglass = document.getElementById('hourglass');
         if (hourglass) {
-            hourglass.style.display = 'none';
+            hourglass.style.opacity = '0'; // Анімація зникнення (додатково)
+            setTimeout(() => {
+                hourglass.style.display = 'none';
+            }, 300); // Час зникнення відповідно до CSS transition
         }
     },
-
     resetTimer: function() {
         if (this.timer) {
-            window.clearTimeout(this.timer);
+            clearTimeout(this.timer); // Очищення таймера
         }
         this.hideHourglass();
-        this.timer = window.setTimeout(this.showHourglass.bind(this), this.timeoutDuration);
+        this.timer = setTimeout(() => {
+            this.showHourglass();
+        }, this.timeoutDuration);
     },
-
     init: function() {
         const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
         events.forEach((event) => {
-            document.addEventListener(event, this.resetTimer.bind(this));
+            document.addEventListener(event, () => this.resetTimer());
         });
-        this.resetTimer();
+        this.resetTimer(); // Запуск таймера при завантаженні
     }
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+// Ініціалізація після завантаження сторінки
+document.addEventListener('DOMContentLoaded', () => {
     window.inactivityHandler.init();
 });
-<script>
+</script>
